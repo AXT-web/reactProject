@@ -1,10 +1,11 @@
 import React from 'react'
 
 import axios from 'axios'
-import { NavBar } from 'antd-mobile'
+import { Toast} from 'antd-mobile'
 
 // 导入 List 组件
 import { List, AutoSizer } from 'react-virtualized'
+import NavHeader from '../../components/NavHeader'
 
 import './index.scss'
 // 导入 utils 中获取当前定位城市的方法
@@ -77,6 +78,7 @@ const formatCityData = list => {
 const TITLE_HEIGHT = 36
 // 每个城市名称的高度
 const NAME_HEIGHT = 50
+const HOST_CITY = ['北京', '上海', '广州', '深圳']
 
 // 封装处理字母索引的方法
 const formatCityIndex = letter => {
@@ -91,6 +93,20 @@ const formatCityIndex = letter => {
 }
 
 export default class CityList extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      cityList: {},
+      cityIndex: [],
+      // 指定右侧字母索引列表高亮的索引号
+      activeIndex: 0
+    }
+
+    // 创建ref对象
+    this.cityListComponent = React.createRef()
+  }
+
   state = {
     cityList: {},
     cityIndex: [],
@@ -98,8 +114,10 @@ export default class CityList extends React.Component {
     activeIndex: 0
   }
 
-  componentDidMount() {
-    this.getCityList()
+  async componentDidMount() {
+    await this.getCityList()
+    // 计算List组件高度
+    this.listComponent.current.measureAllRows()
   }
 
   // 获取城市列表数据的方法
@@ -135,20 +153,49 @@ export default class CityList extends React.Component {
     // 获取每一行的字母索引
     const { cityIndex, cityList } = this.state
     const letter = cityIndex[index]
-
+    const citys = cityList[letter]
     // 获取指定字母索引下的城市列表数据
     // console.log(cityList[letter])
 
     return (
-      <div key={key} style={style} className="city">
+      <div
+        key={key}
+        style={style}
+        className="city"
+      >
         <div className="title">{formatCityIndex(letter)}</div>
-        {cityList[letter].map(item => (
-          <div className="name" key={item.value}>
-            {item.label}
-          </div>
-        ))}
-      </div>
+        {citys.map(item => {
+          return (
+            // 绑定点击事件，传递城市名称和value
+            <div className="name" key={item.value} onClick={() => this.changeCity(item.label, item.value)}>{item.label}</div>
+          )
+        })}</div>
     )
+  }
+
+  changeCity = (label, value) => {
+    if (HOST_CITY.indexOf(label) > -1) {
+      // 说明是有房源数据的城市
+      localStorage.setItem('localCity', JSON.stringify({
+        label,
+        value
+      }))
+    } else {
+      // 没有房源城市，提示用户
+      Toast.info('当前城市没有房源', 1);
+    }
+  }
+
+  /**
+  * 获取滚动时候,相应的数据
+  * @param {*} param0 
+  */
+  rowRendered = ({ startIndex }) => {
+    if (this.state.activeIndex !== startIndex) {
+      this.setState({
+        activeIndex: startIndex
+      })
+    }
   }
 
   // 创建动态计算每一行高度的方法
@@ -164,7 +211,10 @@ export default class CityList extends React.Component {
     // 获取到 cityIndex，并遍历其，实现渲染
     const { cityIndex, activeIndex } = this.state
     return cityIndex.map((item, index) => (
-      <li className="city-index-item" key={item}>
+      <li className="city-index-item" key={item} onClick={() => {
+        // 拿到List组件的实例
+        this.listComponent.current.scrollToRow(index)
+      }}>
         <span className={activeIndex === index ? 'index-active' : ''}>
           {item === 'hot' ? '热' : item.toUpperCase()}
         </span>
@@ -193,19 +243,13 @@ export default class CityList extends React.Component {
     return (
       <div className="citylist">
         {/* 顶部导航栏 */}
-        <NavBar
-          className="navbar"
-          mode="light"
-          icon={<i className="iconfont icon-back" />}
-          onLeftClick={() => this.props.history.go(-1)}
-        >
-          城市选择
-        </NavBar>
+        <NavHeader>城市选择</NavHeader>
 
         {/* 城市列表 */}
         <AutoSizer>
           {({ width, height }) => (
             <List
+              ref={this.listComponent}
               width={width}
               height={height}
               rowCount={this.state.cityIndex.length}

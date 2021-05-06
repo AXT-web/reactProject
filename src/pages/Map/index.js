@@ -1,7 +1,8 @@
 import React from 'react'
+import NavHeader from '../../components/NavHeader'
 
 // 导入样式
-import './index.scss'
+import styles from './index.module.css'
 
 export default class Map extends React.Component {
   componentDidMount() {
@@ -15,9 +16,12 @@ export default class Map extends React.Component {
   }
   render() {
     return (
-      <div className="map">
+      <div className="styles.map">
         {/* 地图容器元素 */}
-        <div id="container" />
+        <NavHeader>
+          地图找房
+        </NavHeader>
+        <div id="container" className={styles.container}></div>
       </div>
     )
   }

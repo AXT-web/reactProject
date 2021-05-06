@@ -9,6 +9,9 @@ import nav4 from '../../assets/images/nav-4.png'
 
 import './index.scss'
 
+// 导入utils中获取定位城市的方法
+import { getCurrentCity } from '../../utils'
+
 // 导航菜单的数据
 const navs = [{
   id: 0,
@@ -24,12 +27,12 @@ const navs = [{
   id: 2,
   img: nav3,
   title: '地图找房',
-  path: '/home/map'
+  path: '/map'
 }, {
   id: 3,
   img: nav4,
   title: '去出租',
-  path: '/home/list'
+  path: '/rent'
 }]
 
 // 获取地理位置信息
@@ -53,23 +56,27 @@ export default class CityList extends React.Component {
   }
 
   // 声明周期钩子函数，修改状态，设置数据
-  componentDidMount() {
+  async componentDidMount() {
     // 调用请求轮播图的方法
     this.getSwipers()
     this.getGroups()
     this.getNews()
 
     // 2 通过 IP 定位获取到当前城市名称。
-    const curCity = new window.BMap.LocalCity()
-    curCity.get(async res => {
-      // console.log('当前城市信息：', res)
-      const result = await axios.get(
-        `http://localhost:8080/area/info?name=${res.name}`
-      )
-      // console.log(result)
-      this.setState({
-        curCityName: result.data.body.label
-      })
+    // const curCity = new window.BMap.LocalCity()
+    // curCity.get(async res => {
+    //   // console.log('当前城市信息：', res)
+    //   const result = await axios.get(
+    //     `http://localhost:8080/area/info?name=${res.name}`
+    //   )
+    //   // console.log(result)
+    //   this.setState({
+    //     curCityName: result.data.body.label
+    //   })
+    // })
+    const curCity = await getCurrentCity()
+    this.setState({
+      curCityName: curCity.label
     })
   }
 
