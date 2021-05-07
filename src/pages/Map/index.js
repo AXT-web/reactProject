@@ -1,9 +1,13 @@
 import React from 'react'
 
 // 导入axios
-import axios from 'axios'
+// import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { Toast } from 'antd-mobile'
+import { API } from '../../utils/api.js'
+
+// 导入BASE_URL
+import { BASE_URL } from '../../utils/url'
 
 // 导入封装好的 NavHeader 组件
 import NavHeader from '../../components/NavHeader'
@@ -85,7 +89,7 @@ export default class Map extends React.Component {
       // 开启loading
       Toast.loading('加载中...', 0, null, false)
 
-      const res = await axios.get(`http://localhost:8080/area/map?id=${id}`)
+      const res = await API.get(`http://localhost:8080/area/map?id=${id}`)
       // 关闭 loading
       Toast.hide()
 
@@ -243,7 +247,7 @@ export default class Map extends React.Component {
       // 开启loading
       Toast.loading('加载中...', 0, null, false)
 
-      const res = await axios.get(`http://localhost:8080/houses?cityId=${id}`)
+      const res = await API.get(`http://localhost:8080/houses?cityId=${id}`)
       // 关闭 loading
       Toast.hide()
 
@@ -265,7 +269,7 @@ export default class Map extends React.Component {
         <div className={styles.imgWrap}>
           <img
             className={styles.img}
-            src={`http://localhost:8080${item.houseImg}`}
+            src={BASE_URL + item.houseImg}
             alt=""
           />
         </div>

@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom'
 import { TabBar } from 'antd-mobile'
 
 import Index from '../Index'
-import HouseList from '../CityList'
+import HouseList from '../HouseList'
 import News from '../News'
 import Profile from '../Profile'
 

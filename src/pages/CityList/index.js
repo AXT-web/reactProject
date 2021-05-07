@@ -1,6 +1,6 @@
 import React from 'react'
 
-import axios from 'axios'
+import { API } from '../../utils/api.js'
 import { Toast} from 'antd-mobile'
 
 // 导入 List 组件
@@ -122,11 +122,11 @@ export default class CityList extends React.Component {
 
   // 获取城市列表数据的方法
   async getCityList() {
-    const res = await axios.get('http://localhost:8080/area/city?level=1')
+    const res = await API.get('http://localhost:8080/area/city?level=1')
     const { cityList, cityIndex } = formatCityData(res.data.body)
 
     // 获取热门城市数据
-    const hotRes = await axios.get('http://localhost:8080/area/hot')
+    const hotRes = await API.get('http://localhost:8080/area/hot')
     cityList['hot'] = hotRes.data.body
     cityIndex.unshift('hot')
 

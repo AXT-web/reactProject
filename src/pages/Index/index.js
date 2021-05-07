@@ -1,6 +1,6 @@
 import React from 'react'
 import { Carousel, WingBlank, Flex, Grid } from 'antd-mobile';
-import axios from 'axios'
+import { API } from '../../utils/api.js'
 
 import nav1 from '../../assets/images/nav-1.png'
 import nav2 from '../../assets/images/nav-2.png'
@@ -8,6 +8,8 @@ import nav3 from '../../assets/images/nav-3.png'
 import nav4 from '../../assets/images/nav-4.png'
 
 import './index.scss'
+// 导入
+import { BASE_URL } from '../../utils/url'
 
 // 导入utils中获取定位城市的方法
 import { getCurrentCity } from '../../utils'
@@ -82,7 +84,7 @@ export default class CityList extends React.Component {
 
   async getSwipers() {
     // 请求数据
-    let { data: res } = await axios.get('http://localhost:8080/home/swiper')
+    let { data: res } = await API.get('http://localhost:8080/home/swiper')
     // 判断返回的状态是否是成功
     if (res.status !== 200) {
       console.error(res.description)
@@ -95,7 +97,7 @@ export default class CityList extends React.Component {
     })
   }
   async getGroups() {
-    let { data: res } = await axios.get('http://localhost:8080/home/groups', {
+    let { data: res } = await API.get('http://localhost:8080/home/groups', {
       params: {
         'area': 'AREA%7C88cff55c-aaa4-e2e0'
       }
@@ -111,7 +113,7 @@ export default class CityList extends React.Component {
     })
   }
   async getNews() {
-    let { data: res } = await axios.get('http://localhost:8080/home/news?area=AREA%7C88cff55c-aaa4-e2e0')
+    let { data: res } = await API.get('http://localhost:8080/home/news?area=AREA%7C88cff55c-aaa4-e2e0')
     // 判断返回的状态是否是成功
     if (res.status !== 200) {
       console.error(res.description)
@@ -132,7 +134,7 @@ export default class CityList extends React.Component {
         style={{ display: 'inline-block', width: '100%', height: 212 }}
       >
         <img
-          src={`http://localhost:8080${item.imgSrc}`}
+          src={BASE_URL+item.imgSrc}
           alt=""
           style={{ width: '100%', verticalAlign: 'top' }}
         >
@@ -158,7 +160,7 @@ export default class CityList extends React.Component {
           <p className="title">{item.title}</p>
           <span className="info">{item.desc}</span>
         </div>
-        <img src={`http://localhost:8080${item.imgSrc}`} alt="" />
+        <img src={BASE_URL+item.imgSrc} alt="" />
       </Flex>
     )
   }
@@ -168,7 +170,7 @@ export default class CityList extends React.Component {
         <div className="imgwrap">
           <img
             className="img"
-            src={`http://localhost:8080${item.imgSrc}`}
+            src={BASE_URL+item.imgSrc}
             alt=""
           />
         </div>
@@ -258,7 +260,7 @@ export default class CityList extends React.Component {
                   <p className="title">{item.title}</p>
                   <span className="info">{item.desc}</span>
                 </div>
-                <img src={`http://localhost:8080${item.imgSrc}`} alt="" />
+                <img src={BASE_URL+item.imgSrc} alt="" />
               </Flex>
             )}
           />
