@@ -11,6 +11,7 @@ import { BASE_URL } from '../../utils/url'
 
 // 导入封装好的 NavHeader 组件
 import NavHeader from '../../components/NavHeader'
+import HouseItem from '../../components/HouseITem'
 
 // 导入样式
 // import './index.scss'
@@ -262,41 +263,27 @@ export default class Map extends React.Component {
     }
   }
 
-  // 封装渲染房屋列表的方法
-  renderHousesList() {
-    return this.state.housesList.map(item => (
-      <div className={styles.house} key={item.houseCode}>
-        <div className={styles.imgWrap}>
-          <img
-            className={styles.img}
-            src={BASE_URL + item.houseImg}
-            alt=""
-          />
-        </div>
-        <div className={styles.content}>
-          <h3 className={styles.title}>{item.title}</h3>
-          <div className={styles.desc}>{item.desc}</div>
-          <div>
-            {/* ['近地铁', '随时看房'] */}
-            {item.tags.map((tag, index) => {
-              const tagClass = 'tag' + (index + 1)
-              return (
-                <span
-                  className={[styles.tag, styles[tagClass]].join(' ')}
-                  key={tag}
-                >
-                  {tag}
-                </span>
-              )
-            })}
-          </div>
-          <div className={styles.price}>
-            <span className={styles.priceNum}>{item.price}</span> 元/月
-          </div>
-        </div>
-      </div>
-    ))
-  }
+  // 渲染每一行的内容
+  renderHouseList = ({
+    key, // Unique key within array of rows
+    index, // 索引号
+    style // 重点属性：一定要给每一个行数添加该样式
+  }) => {
+    // 当前这一行的
+    const { list } = this.state;
+    const house = list[index];
+    return (
+      <HouseItem
+        key={key}
+        style={style}
+        src={BASE_URL + house.houseImg}
+        title={house.title}
+        desc={house.desc}
+        tags={house.tags}
+        price={house.price}
+      />
+    );
+  };
 
   render() {
     return (
