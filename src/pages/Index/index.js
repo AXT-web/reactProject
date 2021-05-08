@@ -34,7 +34,7 @@ const navs = [{
   id: 3,
   img: nav4,
   title: '去出租',
-  path: '/rent'
+  path: '/rent/add'
 }]
 
 // 获取地理位置信息

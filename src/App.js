@@ -34,6 +34,11 @@ function App() {
         <Route path="/detail/:id" component={HouseDetail} />
         <Route path="/login" component={Login} />
         <Route path="/registe" component={Registe} />
+
+        {/* 配置登录后，才能访问的页面 */}
+        <AuthRoute exact path="/rent" component={Rent} />
+        <AuthRoute path="/rent/add" component={RentAdd} />
+        <AuthRoute path="/rent/search" component={RentSearch} />
       </div>
     </Router>
   )
