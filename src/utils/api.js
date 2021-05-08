@@ -6,4 +6,29 @@ const API = axios.create({
   baseURL: BASE_URL
 })
 
+// 添加请求拦截器
+API.interceptors.request.use(config => {
+  const { url } = config
+  // 判断请求url路径
+  if (
+    url.startsWith('/user') &&
+    !url.startsWith('/user/login') &&
+    !url.startsWith('/user/registered')
+  ) {
+    // 添加请求头
+    config.headers.Authorization = getToken()
+  }
+  return config
+})
+
+// 添加响应拦截器
+API.interceptors.response.use(response => {
+  const { status } = response.data
+  if (status === 400) {
+    // 此时，说明 token 失效，直接移除 token 即可
+    removeToken()
+  }
+  return response
+})
+
 export { API }
