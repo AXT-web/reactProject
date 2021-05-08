@@ -2,16 +2,18 @@ import React from 'react'
 
 // 导入axios
 // import axios from 'axios'
+import { API } from '../../utils/api'
 import { Link } from 'react-router-dom'
 import { Toast } from 'antd-mobile'
-import { API } from '../../utils/api.js'
 
 // 导入BASE_URL
 import { BASE_URL } from '../../utils/url'
 
 // 导入封装好的 NavHeader 组件
 import NavHeader from '../../components/NavHeader'
-import HouseItem from '../../components/HouseITem'
+
+// 导入 HouseItem 组件
+import HouseItem from '../../components/HouseItem'
 
 // 导入样式
 // import './index.scss'
@@ -46,7 +48,13 @@ export default class Map extends React.Component {
   // 初始化地图
   initMap() {
     // 获取当前定位城市
-    const { label, value } = JSON.parse(localStorage.getItem('hkzf_city'))
+    // const { label, value } = JSON.parse(localStorage.getItem('hkzf_city'))
+    // 公司用不了mysql暂时这样写
+    const { label, value } = {
+      "label": "广州",
+      "value": "AREA|e4940177-c04c-383d"
+    }
+
     // 初始化地图实例
     const map = new BMap.Map('container')
     // 作用：能够在其他方法中通过 this 来获取到地图对象
@@ -90,7 +98,7 @@ export default class Map extends React.Component {
       // 开启loading
       Toast.loading('加载中...', 0, null, false)
 
-      const res = await API.get(`http://localhost:8080/area/map?id=${id}`)
+      const res = await API.get(`/area/map?id=${id}`)
       // 关闭 loading
       Toast.hide()
 
@@ -248,7 +256,7 @@ export default class Map extends React.Component {
       // 开启loading
       Toast.loading('加载中...', 0, null, false)
 
-      const res = await API.get(`http://localhost:8080/houses?cityId=${id}`)
+      const res = await API.get(`/houses?cityId=${id}`)
       // 关闭 loading
       Toast.hide()
 
@@ -263,27 +271,48 @@ export default class Map extends React.Component {
     }
   }
 
-  // 渲染每一行的内容
-  renderHouseList = ({
-    key, // Unique key within array of rows
-    index, // 索引号
-    style // 重点属性：一定要给每一个行数添加该样式
-  }) => {
-    // 当前这一行的
-    const { list } = this.state;
-    const house = list[index];
-    return (
+  // 封装渲染房屋列表的方法
+  renderHousesList() {
+    return this.state.housesList.map(item => (
       <HouseItem
-        key={key}
-        style={style}
-        src={BASE_URL + house.houseImg}
-        title={house.title}
-        desc={house.desc}
-        tags={house.tags}
-        price={house.price}
+        key={item.houseCode}
+        src={BASE_URL + item.houseImg}
+        title={item.title}
+        desc={item.desc}
+        tags={item.tags}
+        price={item.price}
       />
-    );
-  };
+    ))
+
+    // return this.state.housesList.map(item => (
+    //   <div className={styles.house} key={item.houseCode}>
+    //     <div className={styles.imgWrap}>
+    //       <img className={styles.img} src={BASE_URL + item.houseImg} alt="" />
+    //     </div>
+    //     <div className={styles.content}>
+    //       <h3 className={styles.title}>{item.title}</h3>
+    //       <div className={styles.desc}>{item.desc}</div>
+    //       <div>
+    //         {/* ['近地铁', '随时看房'] */}
+    //         {item.tags.map((tag, index) => {
+    //           const tagClass = 'tag' + (index + 1)
+    //           return (
+    //             <span
+    //               className={[styles.tag, styles[tagClass]].join(' ')}
+    //               key={tag}
+    //             >
+    //               {tag}
+    //             </span>
+    //           )
+    //         })}
+    //       </div>
+    //       <div className={styles.price}>
+    //         <span className={styles.priceNum}>{item.price}</span> 元/月
+    //       </div>
+    //     </div>
+    //   </div>
+    // ))
+  }
 
   render() {
     return (

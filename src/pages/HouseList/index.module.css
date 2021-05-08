@@ -1,35 +1,43 @@
-/* 覆盖 searchHeader的样式 */
-
-.header {
+.root {
+    /* padding-top: 45px; */
+  }
+  
+  /* 顶部导航栏样式 */
+  .header {
     height: 45px;
-    background-color: #f5f6f5;
     padding: 0 10px;
-}
-
-
-/* 控制左侧小箭头 */
-
-.header :global(.icon-back) {
-    font-size: 16px!important;
+    background-color: #f6f5f6;
+  }
+  
+  .header :global(.icon-back) {
+    font-size: 16px;
     color: #999;
-}
-
-
-/* 控制右侧的图标 */
-
-.header :global(.icon-map) {
-    color: #00ae66;
-}
-
-
-/* 控制search输入框 */
-
-.header :global(.search) {
-    height: 30px;
-}
-
-.searchHeader {
+  }
+  
+  /* 覆盖 SearchHeader 组件的样式： */
+  .searchHeader {
     position: relative;
     top: 0;
     padding: 0;
-}
+  }
+  
+  .searchHeader :global(.icon-map) {
+    color: #00ae66;
+  }
+  
+  .searchHeader :global(.search) {
+    height: 30px;
+  }
+  
+  /* 房屋列表样式 */
+  .houseItems {
+    padding: 0 15px;
+  }
+  
+  .loading {
+    line-height: 120px;
+    text-align: center;
+    height: 110px;
+    background-color: #f6f5f6;
+  }
+  
